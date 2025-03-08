@@ -1,0 +1,160 @@
+/* Modal background overlay */
+.address-modal-container {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+
+.address-modal-container.fade-in {
+  opacity: 1;
+  visibility: visible;
+}
+
+.address-modal-container.fade-out {
+  opacity: 0;
+  visibility: hidden;
+}
+
+
+/* Input container - stack inputs vertically */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  text-align: left;
+}
+
+/* Labels */
+.input-group label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Arrange inputs in pairs (two per row) */
+.input-row {
+  display: flex;
+  gap: 1rem;
+}
+
+/* Each input takes equal space */
+.input-row .input-group {
+  flex: 1;
+}
+
+/* Modal box */
+.address-input-container {
+  background-color: #fff;
+  width: 420px;
+  max-width: 90%;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  transform: translateY(-20px);
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  opacity: 0;
+}
+
+.address-input-container.slide-in {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.address-input-container.slide-out {
+  transform: translateY(-20px);
+  opacity: 0;
+}
+
+
+/* Form title */
+.address-input-container h1 {
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+/* Error message */
+.error-message {
+  color: red;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+/* Input fields container */
+.input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+/* Input styles */
+.input-container input {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+/* Submit button */
+.submit-btn {
+  background-color: var(--primary-color, #333);
+  color: #fff;
+  padding: 0.6rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.submit-btn:hover {
+  background-color: #000;
+}
+
+/* Button container for Cancel & Dummy Data */
+.btn-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+/* Button styles */
+.btn-container button {
+  flex: 1;
+  padding: 0.6rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.btn-container button:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  .address-input-container {
+    width: 90%;
+    padding: 1rem;
+  }
+  .input-row {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+
