@@ -1,3 +1,4 @@
+import toast from "react-hot-toast";
 import "./PreCheckoutModal.css";
 import React, { useEffect, useState } from "react";
 
@@ -44,20 +45,22 @@ export const PreCheckoutModal = ({
           </p>
         </div>
 
-        <div className="address-details-pre-modal">
-          <h3 className="pre-checkout-delivery-title">Delivering To:</h3>
-          <p>
-            <strong>Name:</strong> {orderAddress?.name}
-          </p>
-          <p>
-            <strong>Address:</strong> {orderAddress?.street},{" "}
-            {orderAddress?.city}, {orderAddress?.state}, {orderAddress?.country}
-            , {orderAddress?.pincode}
-          </p>
-          <p>
-            <strong>Phone:</strong> {orderAddress?.phone}
-          </p>
-        </div>
+        {orderAddress && (
+          <div className="address-details-pre-modal">
+            <h3 className="pre-checkout-delivery-title">Delivering To:</h3>
+            <p>
+              <strong>Name:</strong> {orderAddress?.name}
+            </p>
+            <p>
+              <strong>Address:</strong> {orderAddress?.street},{" "}
+              {orderAddress?.city}, {orderAddress?.state},{" "}
+              {orderAddress?.country}, {orderAddress?.pincode}
+            </p>
+            <p>
+              <strong>Phone:</strong> {orderAddress?.phone}
+            </p>
+          </div>
+        )}
 
         <div className="pre-checkout-modal-actions">
           <button
@@ -68,8 +71,10 @@ export const PreCheckoutModal = ({
           </button>
           <button
             onClick={() => {
-              startPayment();
-              handleClose();
+              if (orderAddress) {
+                startPayment();
+                handleClose();
+              } else toast.error("Please select an address first!");
             }}
             className="pre-checkout-confirm-btn"
           >
