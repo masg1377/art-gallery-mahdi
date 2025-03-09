@@ -1,22 +1,22 @@
-import toast from "react-hot-toast";
+import toast from "react-hot-toast"; // Importing the toast notification library
 import "./PreCheckoutModal.css";
 import React, { useEffect, useState } from "react";
 
 export const PreCheckoutModal = ({
-  onToggle,
-  startPayment,
-  totalAmount,
-  totalAmountWithDiscount,
-  orderAddress,
+  onToggle, // Function to toggle the modal visibility
+  startPayment, // Function to start the payment process
+  totalAmount, // The total price before any discounts
+  totalAmountWithDiscount, // The total price after applying the discount
+  orderAddress, // The delivery address for the order
 }) => {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
-    setTimeout(() => setShow(true), 10);
+    setTimeout(() => setShow(true), 10); // Triggering the fade-in effect for modal visibility
   }, []);
 
   const handleClose = () => {
-   setShow(false);
+    setShow(false);
     // Wait for the animation to complete before toggling the modal off
     setTimeout(() => onToggle(false), 300); // Match this duration with your CSS transition
   };
@@ -72,9 +72,9 @@ export const PreCheckoutModal = ({
           <button
             onClick={() => {
               if (orderAddress) {
-                startPayment();
-                handleClose();
-              } else toast.error("Please select an address first!");
+                startPayment(); // Proceed to payment if address is selected
+                handleClose(); // Close the modal after starting payment
+              } else toast.error("Please select an address first!"); // Show error if no address is selected
             }}
             className="pre-checkout-confirm-btn"
           >

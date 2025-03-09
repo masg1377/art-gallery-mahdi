@@ -8,8 +8,10 @@ const cloudinary = require("cloudinary");
 
 // Register User
 exports.registerUser = asyncErrorHandler(async (req, res, next) => {
+  // Destructure data from request body
   let { name, email, gender, password, avatar } = req.body;
 
+  // Initialize an array to keep track of any missing required fields
   const missingFields = [];
   if (!name) missingFields.push("name");
   if (!email) missingFields.push("email");
@@ -17,27 +19,33 @@ exports.registerUser = asyncErrorHandler(async (req, res, next) => {
   if (!password) missingFields.push("password");
   if (!avatar) missingFields.push("avatar");
 
+  // If any fields are missing, respond with an error
   if (missingFields.length > 0) {
     return next(
       new ErrorHandler(`Missing fields: ${missingFields.join(", ")}`, 400)
     );
   }
+
   let myCloud;
   try {
+    // Upload avatar to Cloudinary and set parameters (folder, width, scale crop)
     myCloud = await cloudinary.v2.uploader.upload(avatar, {
       folder: "avatars",
       width: 150,
       crop: "scale",
     });
   } catch (error) {
+    // Handle errors if Cloudinary upload fails
     return next(new ErrorHandler("Failed to upload avatar", 500));
   }
-  
+
+  // Trim email to remove extra spaces
   email = email.trim();
 
+  // Create a new user in the database with the provided data
   const user = await User.create({
     name,
-    email: email.toLowerCase(),
+    email: email.toLowerCase(), // Ensure email is stored in lowercase
     gender,
     password,
     avatar: {
@@ -46,41 +54,52 @@ exports.registerUser = asyncErrorHandler(async (req, res, next) => {
     },
   });
 
+  // Send a success response with a token for the registered user
   sendToken(user, 201, res);
 });
 
 
 // Login User
 exports.loginUser = asyncErrorHandler(async (req, res, next) => {
+  // Destructure email and password from the request body
   let { email, password } = req.body;
 
+  // Check if email and password are provided
   if (!email || !password) {
     return next(new ErrorHandler("Please Enter Email And Password", 400));
   }
 
+  // Trim any leading/trailing whitespace from the email
   email = email.trim();
 
   try {
+    // Find the user by email, ensuring we also retrieve the password field for comparison
     const user = await User.findOne({ email: email.toLowerCase() }).select("+password");
 
+    // If no user is found, return an error indicating invalid credentials
     if (!user) {
       return next(new ErrorHandler("Invalid Email or Password", 401));
     }
 
+    // Compare the provided password with the stored password hash
     const isPasswordMatched = await user.comparePassword(password);
 
+    // If the passwords don't match, return an error indicating invalid credentials
     if (!isPasswordMatched) {
       return next(new ErrorHandler("Invalid Email or Password", 401));
     }
 
+    // If the credentials are valid, send a token (authentication success)
     sendToken(user, 200, res);
 
   } catch (error) {
+    // If any error occurs, return a 500 error with a generic message
     return next(
       new ErrorHandler("Something went wrong. Please try again later.", 500)
     );
   }
 });
+
 
 // Logout User
 exports.logoutUser = asyncErrorHandler(async (req, res, next) => {

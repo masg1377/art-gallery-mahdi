@@ -9,6 +9,7 @@ import "./AddressModal.css";
 import { AddressForm } from "./AddressForm/AddressForm.jsx";
 
 export const AddressModal = () => {
+  // Hooks for user authentication and address management
   const { auth } = useAuth();
   const { dispatch } = useUserData();
   const {
@@ -19,15 +20,17 @@ export const AddressModal = () => {
     setIsEdit,
   } = useAddress();
 
+  // State for managing loading, errors, and modal visibility
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
-
   const [show, setShow] = useState(false);
 
+  // Trigger the modal's fade-in animation when the component mounts
   useEffect(() => {
     setTimeout(() => setShow(true), 10);
   }, []);
 
+  // Dummy address data for testing
   const dummyAddress = {
     name: "Aniket Saini",
     street: "66/6B Main Post Office",
@@ -38,14 +41,17 @@ export const AddressModal = () => {
     phone: "963-906-0737",
   };
 
+  // Function to close the modal with an animation
   const handleClose = () => {
     setShow(false);
-    setTimeout(() => setIsAddressModalOpen(false), 300);
+    setTimeout(() => setIsAddressModalOpen(false), 300); // Delay closing the modal for animation
   };
 
-  // Validation function
+  // Validation function to check if the address form fields are correct
   const validateForm = () => {
-    let newErrors = {};
+    let newErrors = {}; // Initialize an empty errors object
+
+    // Validate each field in the address form
     if (!addressForm.name.trim()) newErrors.name = "Name is required.";
     else if (addressForm.name.trim().length < 3)
       newErrors.name = "Name must be at least 3 characters.";
@@ -65,31 +71,36 @@ export const AddressModal = () => {
     if (!/^\+?[0-9\s-]{8,15}$/.test(addressForm.phone.trim()))
       newErrors.phone = "Invalid phone number format.";
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0; // Return true if no errors
+    setErrors(newErrors); // Update the errors state
+    return Object.keys(newErrors).length === 0; // Return true if no errors are found
   };
 
+  // Handle form submission and interact with the API
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // If validation fails, show an error toast
     if (!validateForm()) {
       toast.error("Please fix the errors before submitting.");
       return;
     }
 
     setLoading(true);
-    setErrors({});
+    setErrors({}); // Clear any existing errors
 
     try {
+      // Choose the appropriate service (add or update) based on edit mode
       const service = isEdit ? updateAddressService : addAddressService;
       const response = await service(addressForm, auth.token);
 
       if (response.status === (isEdit ? 200 : 201)) {
+        // On success, show a success toast and update the user data
         toast.success(`Address ${isEdit ? "updated" : "added"} successfully!`);
         dispatch({ type: "SET_ADDRESS", payload: response.data.addressList });
         handleClose();
-        setIsEdit(false);
+        setIsEdit(false); // Reset the edit mode
 
+        // Clear the address form
         setAddressForm({
           name: "",
           street: "",
@@ -115,7 +126,7 @@ export const AddressModal = () => {
       >
         <h1>Address Form</h1>
 
-        {/* Address Form */}
+        {/* Address Form Component */}
         <AddressForm
           addressForm={addressForm}
           handleSubmit={handleSubmit}

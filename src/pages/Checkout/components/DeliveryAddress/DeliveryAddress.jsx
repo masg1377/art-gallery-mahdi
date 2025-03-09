@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { PreCheckoutModal } from "./PreCheckoutModal/PreCheckoutModal.jsx";
 
 export const DeliveryAddress = () => {
+  // add showPreCheckoutModal state to handle pre checkout modal
   const [showPreCheckoutModal, setShowPreCheckoutModal] = useState(false)
 
   const { userDataState, dispatch, clearCartHandler } = useUserData();
@@ -95,6 +96,7 @@ export const DeliveryAddress = () => {
         </button>
       </div>
 
+      {/* Use PreCheckoutModal for better UX */}
       {showPreCheckoutModal && (
         <PreCheckoutModal
           onToggle={() => setShowPreCheckoutModal(false)}
